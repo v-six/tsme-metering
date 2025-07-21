@@ -2,7 +2,7 @@
 
 import { program } from "commander";
 import { providers } from "../providers/index.js";
-import pkg from "../../package.json";
+import pkg from "../../package.json" with { type: "json" };
 import config from "../config.js";
 import { meterDataToCsv, meterDataToJson, metersDataToCsv, metersDataToJson, wait } from "../helpers.js";
 import { MeteringData } from "src/providers/base.js";
