@@ -1,22 +1,20 @@
 {
-  "release-it": {
-    "npm": {
-      "publish": false
-    },
-    "github": {
-      "release": true
-    },
-    "git": {
-      "tagName": "v${version}",
-      "commitMessage": ":bookmark: release v${version}",
-      "requireCleanWorkingDir": true,
-      "tagAnnotation": "v${version}"
-    },
-    "hooks": {
-      "before:init": [
-        "pnpm install"
-      ],
-      "after:bump": "pnpm build"
-    }
+  "$schema": "https://unpkg.com/release-it@19/schema/release-it.json",
+  "npm": {
+    "publish": false,
+    "skipChecks": true
+  },
+  "github": {
+    "release": true
+  },
+  "git": {
+    "tagName": "v${version}",
+    "commitMessage": ":bookmark: release v${version}",
+    "requireCleanWorkingDir": true,
+    "tagAnnotation": "v${version}"
+  },
+  "hooks": {
+    "before:init": ["pnpm install"],
+    "after:bump": "pnpm build"
   }
 }
