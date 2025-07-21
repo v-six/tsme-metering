@@ -1,6 +1,7 @@
 # TSME-Metering
 
 A useful lib and CLI to collect water meter data from your TSME group provider account.
+
 **⚠️ This code is still experimental: you may encounter issues**
 
 ## Compatibility
@@ -33,6 +34,7 @@ If you don't need the lib and just want to use the CLI, you can use `npx` to exe
 - `TSME_PASSWORD`: password used to connect your water provider account
 
 Env vars are used in both lib code and CLI usage.
+
 This library is using `dotenv` so you can store env vars into a `.env` file.
 
 ### Library
@@ -53,12 +55,17 @@ Each provider has its own client. You need to instantiate the one corresponding 
 Now that you have your client, you are free to call on of its functions:
 
 - `getMetersIds()`
+  
   Get all compatible water meters ids of your account (useful for multiple water meters)
+  
   ← Returns: `number[]`
 
 - `getMetering(meterId, from?, to?)`
+  
   Get data from a specific water meter with optionnal timespan
+  
   → Parameters: `meterId` (number) - `from` (Date) - `to` (Date)
+  
   ← Returns: 
     ```typescript
       Array<{
@@ -69,7 +76,9 @@ Now that you have your client, you are free to call on of its functions:
     ```
 
 - `isLoggedIn()`
+  
   Check if the current client is currently logged in
+  
   ← Returns: `boolean`
 
 Here is a full usage example:
@@ -92,9 +101,11 @@ Here is a full usage example:
 The CLI has two commands:
 
 - `tsme-metering extract-all --provider <suez> --format <csv|json>`
+  
   Extract all water meters data of the current month from the specified account
 
 - `tsme-metering extract <meter-id> --provider <suez> --format <csv|json>`
+  
   Extract one specific water meter data of the current month from the specified account
 
 Both commands outputs can be redirected to a file:
