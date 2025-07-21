@@ -1,0 +1,22 @@
+{
+  "release-it": {
+    "npm": {
+      "publish": false
+    },
+    "github": {
+      "release": true
+    },
+    "git": {
+      "tagName": "v${version}",
+      "commitMessage": ":bookmark: release v${version}",
+      "requireCleanWorkingDir": true,
+      "tagAnnotation": "v${version}"
+    },
+    "hooks": {
+      "before:init": [
+        "pnpm install"
+      ],
+      "after:bump": "pnpm build"
+    }
+  }
+}
