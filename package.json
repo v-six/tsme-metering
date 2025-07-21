@@ -1,0 +1,52 @@
+{
+  "name": "tsme-metering",
+  "version": "0.0.1",
+  "main": "./dist/index.js",
+  "description": "A useful lib and CLI to collect water meter data from your TSME group provider account",
+  "type": "module",
+  "packageManager": "pnpm@10.13.1",
+  "scripts": {
+    "example": "node --import @swc-node/register/esm-register src/examples/index.ts",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "suez",
+    "metering",
+    "extract",
+    "data",
+    "ecology",
+    "smart home"
+  ],
+  "author": {
+    "name": "Kevin Bargoin",
+    "email": "kevin@bargoin.fr",
+    "url": "https://kevin.bargoin.fr"
+  },
+  "license": "MIT",
+  "bin": {
+    "tsme-metering": "./dist/cli/index.js"
+  },
+  "dependencies": {
+    "@date-fns/tz": "^1.2.0",
+    "axios": "^1.10.0",
+    "axios-cookiejar-support": "^6.0.4",
+    "cheerio": "^1.1.0",
+    "commander": "^14.0.0",
+    "date-fns": "^4.1.0",
+    "dotenv": "^17.2.0",
+    "json2csv": "^6.0.0-alpha.2",
+    "tough-cookie": "^5.1.2",
+    "zod": "^4.0.5"
+  },
+  "devDependencies": {
+    "@swc-node/register": "^1.10.10",
+    "@types/json2csv": "^5.0.7",
+    "@types/node": "^24.0.15",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=18.18",
+    "pnpm": ">=9.14.4"
+  }
+}
