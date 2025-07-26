@@ -1,6 +1,6 @@
 {
   "name": "tsme-metering",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "main": "./dist/index.js",
   "description": "A useful lib and CLI to collect water meter data from your TSME group provider account",
   "type": "module",
