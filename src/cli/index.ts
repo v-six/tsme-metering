@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 
 import { program } from "commander";
-import { providers } from "../providers/index.js";
 import pkg from "../../package.json" with { type: "json" };
-import config from "../config.js";
 import { meterDataToCsv, meterDataToJson, metersDataToCsv, metersDataToJson, wait } from "../helpers.js";
-import { MeteringData } from "src/providers/base.js";
+import { MeteringData } from "../providers/base.js";
+import { displaySummary, getClient, getEndDate, getStartDate } from "./utils.js";
 
 program
   .name("tsme-metering")
@@ -15,26 +14,20 @@ program
 program
   .command("extract-all")
   .description("Launch data extraction for all water meters in the account")
+  .option("-s, --start <start>", "The starting date (YYYY-MM-DD)")
+  .option("-e, --end <end>", "The ending date (YYYY-MM-DD)")
   .option("-p, --provider <provider>", "The provider to use", "suez")
   .option("-f, --format <format>", "The output format to use", "json")
   .action(async (options) => {
     console.error(`🚀 Launching extraction of all water meters...`);
 
-    // Check provider name
-    const provider = providers.get(options.provider);
-    if (provider === undefined) {
-      console.error(
-        `❌ Provider name must be one of ${[...providers.keys()].concat(", ")}`
-      );
-      process.exit(1);
-    }
+    // Get client and dates
+    const client = getClient(options.provider);
+    const startDate = getStartDate(options.start);
+    const endDate = getEndDate(options.end);
 
     // Display summary
-    console.error(`- 💾 Provider: ${options.provider}`);
-    console.error(`- 📧 Email: ${config.TSME_EMAIL}`);
-    console.error(`- 🔒 Password: ***`);
-
-    const client = new provider();
+    displaySummary(options.provider, startDate, endDate);
 
     // First get all meters IDs
     const metersIds = await client.getMetersIds();
@@ -46,19 +39,17 @@ program
     // Finally get all meters data
     const metersData: { meterId: string; meteringData: MeteringData[] }[] = [];
     for (const meterId of metersIds) {
-      const meteringData = await client.getMetering(meterId);
+      const meteringData = await client.getMetering(meterId, startDate, endDate);
       metersData.push({ meterId, meteringData });
 
-      await wait(1000); // Be gentle with TSME
+      // Be gentle with TSME if there are more than one water meter
+      if (metersIds.length > 1) {
+        await wait(750); 
+      }
     }
 
-    let output = "";
-    if (options.format === "csv") {
-      output = metersDataToCsv(metersData);
-    } else {
-      output = metersDataToJson(metersData);
-    }
-
+    // Generate output
+    const output = options.format === "csv" ? metersDataToCsv(metersData) : metersDataToJson(metersData);
     console.info(output);
   });
 
@@ -66,26 +57,22 @@ program
   .command("extract")
   .description("Launch data extraction for a specific meter id")
   .argument("<meter-id>", "The meter ID")
+  .option("-s, --start <start>", "The starting date (YYYY-MM-DD)")
+  .option("-e, --end <end>", "The ending date (YYYY-MM-DD)")
   .option("-p, --provider <provider>", "The provider to use", "suez")
   .option("-f, --format <format>", "The output format to use", "json")
   .action(async (meterId, options) => {
     console.error(`🚀 Launching extraction of meter #${meterId}...`);
     
-    // Check provider name
-    const provider = providers.get(options.provider);
-    if (provider === undefined) {
-      console.error(
-        `❌ Provider name must be one of ${[...providers.keys()].concat(", ")}`
-      );
-      process.exit(1);
-    }
+    // Get client and dates
+    const client = getClient(options.provider);
+    const startDate = getStartDate(options.start);
+    const endDate = getEndDate(options.end);
 
     // Display summary
-    console.error(`- 💾 Provider: ${options.provider}`);
-    console.error(`- 📧 Email: ${config.TSME_EMAIL}`);
-    console.error(`- 🔒 Password: ***`);
-
-    const client = new provider();
+    displaySummary(options.provider, startDate, endDate);
+    // Add meter ID
+    console.error(`- 🔧 Meter ID: ${meterId}`);
 
     // First check the meter ID correctness
     const metersIds = await client.getMetersIds();
@@ -95,15 +82,10 @@ program
     }
 
     // Finally get the corresponding meter data
-    const metering = await client.getMetering(meterId);
+    const metering = await client.getMetering(meterId, startDate, endDate);
     
-    let output = "";
-    if (options.format === 'csv') {
-      output = meterDataToCsv(meterId, metering);
-    } else {
-      output = meterDataToJson(meterId, metering);
-    }
-
+    // Generate output
+    const output = options.format === "csv" ? meterDataToCsv(meterId, metering) : meterDataToJson(meterId, metering);
     console.info(output);
   });
 
