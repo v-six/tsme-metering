@@ -100,17 +100,18 @@ Here is a full usage example:
 
 The CLI has two commands:
 
-- `tsme-metering extract-all --provider <suez> --format <csv|json>`
+- `tsme-metering extract-all --provider <suez> --start <2025-07-05> --end <2025-07-07> --format <csv|json>`
   
-  Extract all water meters data of the current month from the specified account
+  Extract all water meters data from the `2025-07-05` to the `2025-07-06` (2 days)
 
-- `tsme-metering extract <meter-id> --provider <suez> --format <csv|json>`
+- `tsme-metering extract <meter-id> --provider <suez> --start <2025-07-01> --format <csv|json>`
   
-  Extract one specific water meter data of the current month from the specified account
+  Extract one specific water meter data from the `2025-07-01` to the last available date (yesterday)
 
+By default, both CLI commands are extracting the current month data if no dates are specified.
 Both commands outputs can be redirected to a file:
 ```bash
-  tsme-metering extract-all --format csv > my_water.csv
+  tsme-metering extract-all --start 2025-07-05 --format csv > my_water.csv
 ```
 
 ## Known limitations
